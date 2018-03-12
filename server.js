@@ -1,6 +1,7 @@
+require('dotenv').config()
+
 const bot = new (require('discord.js').Client)()
 const blotto = require('./lib/blotto') // blotto js is the best js
-const server = require('./lib/server')
 const fs = require('fs')
 
 const pubgers = [
@@ -27,7 +28,7 @@ const aliases = {
   thirsty:   'banthro',
   plog:      'ben',
   jacob:     'cuthbert smilington',
-  cuthbert:  'cuthbert smilington', 
+  cuthbert:  'cuthbert smilington',
   cunt:      'cuthbert smilington',
   failure:   'cuthbert smilington',
   chris:     'chompa666',
@@ -40,7 +41,7 @@ function contains(string, array, wordMatch = false) {
       const regex = new RegExp('\\b'+term+'\\b', 'g')
       return !!string.toLowerCase().match(regex)
     }
-    
+
     //default behaviour
     return includes
   });
@@ -75,7 +76,7 @@ function PUBG(user, guild, config = {}, exclude = []) {
     noBan:   false,
     channel: 'general',
   }, config)
-  
+
   let message = [user.username + ' would like to know if']
   let count   = 0
 
@@ -91,14 +92,13 @@ function PUBG(user, guild, config = {}, exclude = []) {
     }
   })
 
-  
   if(bot.channels.find('name', 'PUBG').members.length === 4) {
     message[0] = 'HAHAHAH, there is already four!'
     message.push('can do one!')
   } else {
     message.push('wants to play PUBG?');
   }
-  
+
   if(!conf.emoji) message.push(':rooster: :airplane: :family_mwbb:')
 
   if(count && !conf.debug) {
@@ -123,7 +123,7 @@ bot.on('voiceStateUpdate', (oldUser, newUser) => {
   // Don't do anything if the old channel is PUBG,
   // that means they're unmuting or something
   if (oldChannel && oldChannel.name === 'PUBG') return
-  
+
   if(channel && channel.name) {
     switch(channel.name) {
       case 'PUBG':
@@ -139,36 +139,36 @@ bot.on('voiceStateUpdate', (oldUser, newUser) => {
         // bot.channels.find('name', 'general').send(user.username + ', You appear to have joined the wrong channel, would you like to join PUBG instead?')
         break;
     }
-    
+
   }
 })
 
 bot.on('message', (msg) => {
-  
+  console.log(msg)
   if(msg.author.bot && msg.author.username !== 'helper-bot' && Math.random() >= 0.7) {
      msg.reply('sorry, I don\'t like helping other bots');
   } else {
-    
+
     if(msg.author.username == 'DanTheOrange' && msg.content === '/reset stupid') {
       fs.writeFileSync('.data/StupidCounter', 0)
     }
-    
+
     if(!msg.author.bot && (msg.content.toLowerCase().includes('ben') || msg.content.toLowerCase().includes('banthro')) && contains(msg.content, ['stupid', 'idiot', 'silly', 'damn it'])) {
       if (!fs.existsSync('.data/StupidCounter')) {
         fs.writeFileSync('.data/StupidCounter', 0)
       }
-      
+
       const dude = bot.users.find('username', 'Banthro')
       let times = fs.readFileSync('.data/StupidCounter').toString()
       times++
-      
+
       msg.channel.send([
         oneOf('Got it,', 'You\'re the boss,', 'Okay,', 'Roger,', 'Understood,', 'Well,'),
         oneOf(dude + ' has been stupid', 'incrementing the stupid counter for ' + dude + ' to', 'unsurprisingly ' + dude + '\'s stupid counter has got to'),
         times,
         oneOf([4, 'times.'], 'times!'),
       ].join(' '))
-      
+
       fs.writeFileSync('.data/StupidCounter', times)
     }
 
@@ -177,7 +177,7 @@ bot.on('message', (msg) => {
       recipient.send(msg.author.username + ' said: ' + msg.content)
     }
 
-    if(msg.author.username === 'Banthro') { 
+    if(msg.author.username === 'Banthro') {
       if(msg.channel.name === 'dans-meme-channel' && Math.random() >= 0.9) {
         msg.reply('why are you talking in here?')
       }
@@ -192,7 +192,7 @@ bot.on('message', (msg) => {
           return word.split('').map((letter, index) => {
             return (index % 2 === 0) ? letter.toUpperCase() : letter;
           }).join('')
-        }).join(' ')) 
+        }).join(' '))
       } else if(Math.random() >= 0.995) {
         msg.reply(oneOf(
           [4, 'damn it!'],
@@ -210,7 +210,7 @@ bot.on('message', (msg) => {
       let response = ''
       let prefix = 'Yeah!'
       let negative
-      
+
       message.some((word, index) => {
         if(contains(word, ['damn', 'darn', 'nice', 'fuck', 'play', 'do', 'hurry', 'good'])) {
           message.splice(0, index)
@@ -219,7 +219,7 @@ bot.on('message', (msg) => {
           return true
         }
       })
-      
+
       if(message[2]) {
         if('.?!'.includes(message[2][message[2].length -1])) {
           message[2] = message[2].slice(0, -1)
@@ -228,7 +228,7 @@ bot.on('message', (msg) => {
         if(aliases[message[2]]) {
           message[2] = aliases[message[2]]
         }
-        
+
         switch(message[2]) {
           case 'me':
           case 'i':
@@ -246,7 +246,7 @@ bot.on('message', (msg) => {
           case 'dantheorange':
             if(negative) {
               prefix = 'No!'
-              response = 'You are perfect'          
+              response = 'You are perfect'
             }
             break;
           case 'dan':
@@ -269,16 +269,16 @@ bot.on('message', (msg) => {
             }
             break;
         }
-           
+
         let damnIt = bot.users.find((user) => {
           return user.username.toLowerCase() === message[2].toLowerCase() ? true : false
         })
 
         if(!damnIt) damnIt = message[2]
-        
+
         if(damnIt) {
           const sentence = [
-            response, 
+            response,
             damnIt,
           ]
 
@@ -287,11 +287,11 @@ bot.on('message', (msg) => {
         }
       }
     }
-    
+
     if(msg.content === '/lazy') {
       msg.reply('is very lazy')
     }
-    
+
     if(msg.content === '/approve') {
       msg.reply('ᶘ ◕ᴥ◕ᶅ,b  I approve')
     }
@@ -299,17 +299,17 @@ bot.on('message', (msg) => {
     if(msg.content === '/help') {
       msg.reply('maybe <@' + bot.users.random().id + '> can help you?')
     }
-    
+
     if(msg.content.toLowerCase().startsWith('/get')) {
       const options = msg.content.split(' ')
       options.shift()
       const user = bot.users.find((person) => {
         return person.username.toLowerCase() === options[0].toLowerCase() ? true : false
       })
-      
+
       const times = options[1] || 5
       const interval = options[2] || 1000
-      
+
       let i
 
       for(i = times; i > 0; i--) {
@@ -324,10 +324,10 @@ bot.on('message', (msg) => {
       options.shift()
 
       const dude = bot.users.find('username', options[0])
-      
+
       options.shift()
       options.join(' ')
-      
+
       dude.send(options)
     }
 
@@ -343,7 +343,7 @@ bot.on('message', (msg) => {
     if(msg.content.toLowerCase().startsWith('chicken dinner')) {
       PUBG(msg.author, msg.guild)
     }
-    
+
     if(msg.content.toLowerCase().startsWith('/pubg')) {
       const options = msg.content.split(' ')
       options.shift()
@@ -361,5 +361,5 @@ bot.on('message', (msg) => {
     }
   }
 })
- 
+
 bot.login(process.env.DISCORD_BOT_TOKEN)

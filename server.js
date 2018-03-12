@@ -139,7 +139,6 @@ bot.on('voiceStateUpdate', (oldUser, newUser) => {
         // bot.channels.find('name', 'general').send(user.username + ', You appear to have joined the wrong channel, would you like to join PUBG instead?')
         break;
     }
-
   }
 })
 

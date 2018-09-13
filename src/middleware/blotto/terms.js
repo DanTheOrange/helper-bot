@@ -6,6 +6,7 @@ module.exports = [
   'blotto',
   'bombed',
   'boozy',
+  'booze',
   'canned',
   'cockeyed',
   'crocked',
